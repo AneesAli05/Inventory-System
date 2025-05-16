@@ -175,20 +175,25 @@ def search_supplier():
 
 def show_all_suppliers():
     fetch_suppliers()
+def supplier_form(window, content_frame, draw_dashboard):
+    global invoice_no_entry, supplier_name_entry, contact_entry, description_entry, supplier_tree_view, search_combo, search_entry
 
-def supplier_form(window):
-    global backIcon, invoice_no_entry, supplier_name_entry, contact_entry, description_entry, supplier_tree_view, search_combo, search_entry
+    # Clear the content frame
+    for widget in content_frame.winfo_children():
+        widget.destroy()
 
-    supplier_frame = Frame(window, width=1070, height=567, bg='white')
-    supplier_frame.place(x=200, y=100)
-    head_Label = Label(supplier_frame, text='Manage Supplier Details', font=('times new roman', 16, 'bold'), bg='#0f4d7d', fg='white')
-    head_Label.place(x=0, y=0, relwidth=1)
-    backIcon = PhotoImage(file='return.png')
-    back_btn = Button(supplier_frame, image=backIcon, bd=0, cursor='hand2', bg='white', command=lambda: supplier_frame.place_forget())
-    back_btn.place(x=10, y=30)
+    supplier_frame = Frame(content_frame, bg='white')
+    supplier_frame.place(x=0, y=0, width=1070, height=555)
+
+    head_Label = Label(supplier_frame, text='Manage Supplier Details', font=('times new roman', 20, 'bold'), bg='#010c48', fg='white')
+    head_Label.pack(fill=X)
+
+    # Back Button
+    back_btn = Button(supplier_frame, text="⬅", font=('times new roman', 15, 'bold'), command=lambda: draw_dashboard(content_frame))
+    back_btn.place(x=10, y=10)
 
     top_frame = Frame(supplier_frame, bg='white')
-    top_frame.place(x=0, y=60, relwidth=1, height=235)
+    top_frame.place(x=0, y=50, relwidth=1, height=235)
 
     search_frame = Frame(top_frame, bg='white')
     search_frame.pack()
@@ -228,7 +233,7 @@ def supplier_form(window):
     fetch_suppliers()  # Load initial data
 
     detail_frame = Frame(supplier_frame, bg='white')
-    detail_frame.place(x=10, y=300, relwidth=1, height=200) # Adjust height as needed
+    detail_frame.place(x=10, y=300, relwidth=1, height=200)
 
     # Configure column weights for detail_frame
     detail_frame.columnconfigure(1, weight=1)
@@ -259,8 +264,7 @@ def supplier_form(window):
     button_frame = Frame(detail_frame, bg='white')
     button_frame.grid(row=2, columnspan=4, pady=15)
 
-    save_btn = Button(button_frame, text='Save', font=('times new roman', 12, 'bold'), bg='#2196f3', fg='white',
-                      width=10,
+    save_btn = Button(button_frame, text='Save', font=('times new roman', 12, 'bold'), bg='#2196f3', fg='white', width=10,
                       cursor='hand2', command=save_supplier)
     save_btn.grid(row=0, column=0, padx=10)
 

@@ -265,7 +265,6 @@ def search_sale():
 
 def show_all_sales():
     fetch_sales()
-
 def sales_form(window, content_frame, draw_dashboard):
     global quantity_entry, total_price_entry, sale_date_entry, product_combo, sales_table, search_by_combo, search_entry, product_dict
 
@@ -287,7 +286,7 @@ def sales_form(window, content_frame, draw_dashboard):
     sales_title.pack(fill=X)
 
     # Back Button
-    back_btn = Button(sales_frame, text="⬅", font=('times new roman', 15, 'bold'), command=draw_dashboard)
+    back_btn = Button(sales_frame, text="⬅", font=('times new roman', 15, 'bold'), command=lambda: draw_dashboard(content_frame))
     back_btn.place(x=10, y=10)
 
     # --- Left Side: Input Form ---
@@ -312,7 +311,7 @@ def sales_form(window, content_frame, draw_dashboard):
     # Total Price
     total_price_label = Label(input_frame, text="Total Price", font=('times new roman', 15), bg='white')
     total_price_label.pack(anchor='w', pady=5)
-    total_price_entry = Entry(input_frame, font=('times new roman', 12), bg='lightyellow', state='readonly')
+    total_price_entry = Entry(input_frame, font=('times new roman', 12), bg='lightyellow')
     total_price_entry.pack(fill=X)
     total_price_entry.insert(0, '0.00')
 

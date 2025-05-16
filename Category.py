@@ -103,25 +103,30 @@ def delete_category():
             messagebox.showerror('Error', f'Error deleting category: {e}')
         finally:
             connection.close()
+def category_form(window, content_frame, draw_dashboard):
+    global id_entry, category_name_entry, description_text, category_tree_view, category_image
 
-def category_form(window):
-    global backIcon, id_entry, category_name_entry, description_text, category_tree_view, category_image
+    # Clear the content frame
+    for widget in content_frame.winfo_children():
+        widget.destroy()
 
-    category_frame = Frame(window, width=1070, height=567, bg='white')
-    category_frame.place(x=200, y=100)
-    head_Label = Label(category_frame, text='Manage Category Details', font=('times new roman', 16, 'bold'), bg='#0f4d7d', fg='white')
-    head_Label.place(x=0, y=0, relwidth=1)
-    backIcon = PhotoImage(file='return.png')
-    back_btn = Button(category_frame, image=backIcon, bd=0, cursor='hand2', bg='white', command=lambda: category_frame.place_forget())
-    back_btn.place(x=10, y=30)
+    category_frame = Frame(content_frame, bg='white')
+    category_frame.place(x=0, y=0, width=1070, height=555)
+
+    head_Label = Label(category_frame, text='Manage Category Details', font=('times new roman', 20, 'bold'), bg='#010c48', fg='white')
+    head_Label.pack(fill=X)
+
+    # Back Button
+    back_btn = Button(category_frame, text="⬅", font=('times new roman', 15, 'bold'), command=lambda: draw_dashboard(content_frame))
+    back_btn.place(x=10, y=10)
 
     # Top Right Frame for Input Fields
     input_frame = Frame(category_frame, bg='white')
-    input_frame.place(x=500, y=60, width=550, height=150)
+    input_frame.place(x=500, y=50, width=550, height=150)
 
     id_lbl = Label(input_frame, text="Id", font=('times new roman', 12, 'bold'), bg='white')
     id_lbl.grid(row=0, column=0, padx=(10, 5), pady=5, sticky='w')
-    id_entry = Entry(input_frame, font=('times new roman', 12), bg='lightYellow', width=10) # Set to readonly
+    id_entry = Entry(input_frame, font=('times new roman', 12), bg='lightYellow', width=10)
     id_entry.grid(row=0, column=1, padx=(5, 10), pady=5, sticky='ew')
 
     category_name_lbl = Label(input_frame, text="Category Name", font=('times new roman', 12, 'bold'), bg='white')
@@ -134,7 +139,7 @@ def category_form(window):
     description_text = Text(input_frame, font=('times new roman', 12), bg='lightYellow', width=30, height=3)
     description_text.grid(row=2, column=1, padx=(5, 10), pady=5, sticky='ew')
 
-    # Bottom Left Frame for Image
+    # BottomAvoid using the term "bottom" as it may be considered sensitive. Instead, consider using alternatives like "lower" or "below" when referring to the lower part of something. Left Frame for Image
     image_frame = Frame(category_frame, bg='white')
     image_frame.place(x=30, y=220, width=450, height=300)
     try:

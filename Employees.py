@@ -92,7 +92,7 @@ def populate_employee_details(event):
         salary_entry.delete(0, END)
         salary_entry.insert(0, values[11])
         usertype_combo.set(values[12])
-        password_entry.delete(0, END) # Consider if you want to populate the password field
+        password_entry.delete(0, END)  # Consider if you want to populate the password field
 
 def save_employee():
     global empid_entry, name_entry, email_entry, gender_combo, dob_entry, contact_entry, \
@@ -230,36 +230,41 @@ def search_employee():
 
 def show_all_employees():
     fetch_employees()
-
-def emp_form(window):
+def emp_form(window, content_frame, draw_dashboard):
     global backIcon, empid_entry, name_entry, email_entry, gender_combo, dob_entry, contact_entry, \
            employment_combo, education_entry, workshift_combo, address_entry, doj_entry, salary_entry, \
            usertype_combo, password_entry, employee_tree_view, search_combo, search_entry, dob_cal, doj_cal_
 
-    emp_frame = Frame(window, width=1070, height=567, bg='white')
-    emp_frame.place(x=200, y=100)
-    head_Label = Label(emp_frame, text='Manage Employee Details', font=('times new roman', 16, 'bold'), bg='#0f4d7d', fg='white')
-    head_Label.place(x=0, y=0, relwidth=1)
-    backIcon = PhotoImage(file='return.png')
-    back_btn = Button(emp_frame, image=backIcon, bd=0, cursor='hand2', bg='white', command=lambda: emp_frame.place_forget())
-    back_btn.place(x=10, y=30)
+    # Clear the content frame
+    for widget in content_frame.winfo_children():
+        widget.destroy()
+
+    emp_frame = Frame(content_frame, bg='white')
+    emp_frame.place(x=0, y=0, width=1070, height=555)
+
+    head_Label = Label(emp_frame, text='Manage Employee Details', font=('times new roman', 20, 'bold'), bg='#010c48', fg='white')
+    head_Label.pack(fill=X)
+
+    # Back Button
+    back_btn = Button(emp_frame, text="⬅", font=('times new roman', 15, 'bold'), command=lambda: draw_dashboard(content_frame))
+    back_btn.place(x=10, y=10)
 
     top_frame = Frame(emp_frame, bg='white')
-    top_frame.place(x=0, y=60, relwidth=1, height=235)
+    top_frame.place(x=0, y=50, relwidth=1, height=235)
 
     search_frame = Frame(top_frame, bg='white')
     search_frame.pack()
-    search_combo = ttk.Combobox(search_frame, values=('Id', 'Name', 'Email'), font=('times new roman', 12), state='readonly', width=15)
+    search_combo = ttk.Combobox(search_frame, values=('Id', 'Name', 'Email'), font=('times new roman', 12), state='readonly', width=10)
     search_combo.set('Search by')
-    search_combo.grid(row=0, column=0, padx=20)
+    search_combo.grid(row=0, column=0, padx=10, pady=5)
 
-    search_entry = Entry(search_frame, font=('times new roman', 12), bg='lightyellow', width=20)
-    search_entry.grid(row=0, column=1)
+    search_entry = Entry(search_frame, font=('times new roman', 12), bg='lightyellow', width=15)
+    search_entry.grid(row=0, column=1, padx=10, pady=5)
 
-    search_btn = Button(search_frame, text='Search', font=('times new roman', 12), width=10, cursor='hand2', fg='white', bg='#0f4d7d', command=search_employee)
-    search_btn.grid(row=0, column=2, padx=20)
-    show_btn = Button(search_frame, text='Show All', font=('times new roman', 12), width=10, cursor='hand2', fg='white', bg='#0f4d7d', command=show_all_employees)
-    show_btn.grid(row=0, column=3)
+    search_btn = Button(search_frame, text='Search', font=('times new roman', 12), width=8, cursor='hand2', fg='white', bg='#0f4d7d', command=search_employee)
+    search_btn.grid(row=0, column=2, padx=10, pady=5)
+    show_btn = Button(search_frame, text='Show All', font=('times new roman', 12), width=8, cursor='hand2', fg='white', bg='#0f4d7d', command=show_all_employees)
+    show_btn.grid(row=0, column=3, padx=10, pady=5)
 
     horizontal_scrollbar = Scrollbar(top_frame, orient=HORIZONTAL)
     vertical_scrollbar = Scrollbar(top_frame, orient=VERTICAL)
@@ -272,6 +277,7 @@ def emp_form(window):
     vertical_scrollbar.config(command=employee_tree_view.yview)
     employee_tree_view.pack(pady=(10, 0))
 
+    # Rest of the treeview configuration remains the same
     employee_tree_view.heading('empID', text='EmpID')
     employee_tree_view.heading('name', text='Name')
     employee_tree_view.heading('email', text='Email')
@@ -306,10 +312,10 @@ def emp_form(window):
     detail_frame = Frame(emp_frame, bg='white')
     detail_frame.place(x=10, y=300, relwidth=1, height=250)
 
-    # Configure
+    # Rest of the form (labels, entries, buttons) remains the same
     # Configure column weights for detail_frame
-    detail_frame.columnconfigure(1, weight=1)
-    detail_frame.columnconfigure(3, weight=1)
+    for i in range(6):
+        detail_frame.columnconfigure(i, weight=1)
 
     # Function to open the calendar for Date of Birth
     def open_dob_calendar():
@@ -339,111 +345,110 @@ def emp_form(window):
         select_date_btn = Button(top, text='Select Date', command=set_doj)
         select_date_btn.pack(pady=5)
 
-    # Labels and Entry fields for Employee Details - Adjusted padding and sticky, and reduced widths
+    # Labels and Entry fields for Employee Details
     empid_lbl = Label(detail_frame, text="EmpId", font=('times new roman', 12, 'bold'), bg='white')
-    empid_lbl.grid(row=0, column=0, padx=(3, 1), pady=2, sticky='w')
-    empid_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=8)  # Reduced width
-    empid_entry.grid(row=0, column=1, padx=(1, 3), pady=2, sticky='ew')
+    empid_lbl.grid(row=0, column=0, padx=5, pady=2, sticky='w')
+    empid_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=6)
+    empid_entry.grid(row=0, column=1, padx=5, pady=2, sticky='w')
 
     name_lbl = Label(detail_frame, text="Name", font=('times new roman', 12, 'bold'), bg='white')
-    name_lbl.grid(row=0, column=2, padx=(3, 1), pady=2, sticky='w')
-    name_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)  # Reduced width
-    name_entry.grid(row=0, column=3, padx=(1, 3), pady=2, sticky='ew')
+    name_lbl.grid(row=0, column=2, padx=5, pady=2, sticky='w')
+    name_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=15)
+    name_entry.grid(row=0, column=3, padx=5, pady=2, sticky='w')
 
     email_lbl = Label(detail_frame, text="Email", font=('times new roman', 12, 'bold'), bg='white')
-    email_lbl.grid(row=1, column=0, padx=(3, 1), pady=2, sticky='w')
-    email_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=12)  # Reduced width
-    email_entry.grid(row=1, column=1, padx=(1, 3), pady=2, sticky='ew')
+    email_lbl.grid(row=1, column=0, padx=5, pady=2, sticky='w')
+    email_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=20)
+    email_entry.grid(row=1, column=1, padx=5, pady=2, sticky='w', columnspan=2)
 
     gender_lbl = Label(detail_frame, text="Gender", font=('times new roman', 12, 'bold'), bg='white')
-    gender_lbl.grid(row=1, column=2, padx=(3, 1), pady=2, sticky='w')
+    gender_lbl.grid(row=1, column=3, padx=5, pady=2, sticky='w')
     gender_combo = ttk.Combobox(detail_frame, values=('Male', 'Female', 'Other'), font=('times new roman', 12),
                                 state='readonly', width=8)
-    gender_combo.grid(row=1, column=3, padx=(1, 3), pady=2, sticky='ew')
+    gender_combo.grid(row=1, column=4, padx=5, pady=2, sticky='w')
     gender_combo.set('Select Gender')
 
     dob_lbl = Label(detail_frame, text="Date of Birth", font=('times new roman', 12, 'bold'), bg='white')
-    dob_lbl.grid(row=2, column=0, padx=(3, 1), pady=2, sticky='w')
-    dob_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=8)  # Reduced width
-    dob_entry.grid(row=2, column=1, padx=(1, 3), pady=2, sticky='ew')
+    dob_lbl.grid(row=2, column=0, padx=5, pady=2, sticky='w')
+    dob_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)
+    dob_entry.grid(row=2, column=1, padx=5, pady=2, sticky='w')
     dob_entry.insert(0, 'DD/MM/YYYY')
     dob_calendar_btn = Button(detail_frame, text='...', font=('times new roman', 10, 'bold'), width=2,
                               command=open_dob_calendar)
-    dob_calendar_btn.grid(row=2, column=2, padx=(1, 1), pady=2, sticky='w')
+    dob_calendar_btn.grid(row=2, column=2, padx=2, pady=2, sticky='w')
 
     contact_lbl = Label(detail_frame, text="Contact", font=('times new roman', 12, 'bold'), bg='white')
-    contact_lbl.grid(row=2, column=3, padx=(3, 1), pady=2, sticky='w')
-    contact_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=8)  # Reduced width
-    contact_entry.grid(row=2, column=4, padx=(1, 3), pady=2, sticky='ew')  # Adjusted column
+    contact_lbl.grid(row=2, column=3, padx=5, pady=2, sticky='w')
+    contact_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)
+    contact_entry.grid(row=2, column=4, padx=5, pady=2, sticky='w')
 
     employment_lbl = Label(detail_frame, text="Employment Type", font=('times new roman', 12, 'bold'), bg='white')
-    employment_lbl.grid(row=3, column=0, padx=(3, 1), pady=2, sticky='w')
+    employment_lbl.grid(row=3, column=0, padx=5, pady=2, sticky='w')
     employment_combo = ttk.Combobox(detail_frame, values=('Full-Time', 'Part-Time', 'Contract'),
-                                    font=('times new roman', 12), state='readonly', width=10)  # Reduced width
-    employment_combo.grid(row=3, column=1, padx=(1, 3), pady=2, sticky='ew')
+                                    font=('times new roman', 12), state='readonly', width=10)
+    employment_combo.grid(row=3, column=1, padx=5, pady=2, sticky='w')
     employment_combo.set('Select Type')
 
     education_lbl = Label(detail_frame, text="Education", font=('times new roman', 12, 'bold'), bg='white')
-    education_lbl.grid(row=3, column=2, padx=(3, 1), pady=2, sticky='w')
-    education_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)  # Reduced width
-    education_entry.grid(row=3, column=3, padx=(1, 3), pady=2, sticky='ew')
+    education_lbl.grid(row=3, column=2, padx=5, pady=2, sticky='w')
+    education_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=15)
+    education_entry.grid(row=3, column=3, padx=5, pady=2, sticky='w')
     education_entry.insert(0, 'Select Education')
 
     workshift_lbl = Label(detail_frame, text="Work Shift", font=('times new roman', 12, 'bold'), bg='white')
-    workshift_lbl.grid(row=4, column=0, padx=(3, 1), pady=2, sticky='w')
+    workshift_lbl.grid(row=4, column=0, padx=5, pady=2, sticky='w')
     workshift_combo = ttk.Combobox(detail_frame, values=('Morning', 'Evening', 'Night'), font=('times new roman', 12),
-                                   state='readonly', width=6)  # Reduced width
-    workshift_combo.grid(row=4, column=1, padx=(1, 3), pady=2, sticky='ew')
+                                   state='readonly', width=8)
+    workshift_combo.grid(row=4, column=1, padx=5, pady=2, sticky='w')
     workshift_combo.set('Select Shift')
 
     address_lbl = Label(detail_frame, text="Address", font=('times new roman', 12, 'bold'), bg='white')
-    address_lbl.grid(row=4, column=2, padx=(3, 1), pady=2, sticky='w')
-    address_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=15)  # Reduced width
-    address_entry.grid(row=4, column=3, padx=(1, 3), pady=2, sticky='ew')
+    address_lbl.grid(row=4, column=2, padx=5, pady=2, sticky='w')
+    address_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=20)
+    address_entry.grid(row=4, column=3, padx=5, pady=2, sticky='w', columnspan=2)
 
     doj_lbl = Label(detail_frame, text="Date of Joining", font=('times new roman', 12, 'bold'), bg='white')
-    doj_lbl.grid(row=5, column=0, padx=(3, 1), pady=2, sticky='w')
-    doj_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=8)  # Reduced width
-    doj_entry.grid(row=5, column=1, padx=(1, 3), pady=2, sticky='ew')
+    doj_lbl.grid(row=5, column=0, padx=5, pady=2, sticky='w')
+    doj_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)
+    doj_entry.grid(row=5, column=1, padx=5, pady=2, sticky='w')
     doj_entry.insert(0, 'DD/MM/YYYY')
     doj_calendar_btn = Button(detail_frame, text='...', font=('times new roman', 10, 'bold'), width=2,
                               command=open_doj_calendar)
-    doj_calendar_btn.grid(row=5, column=2, padx=(1, 1), pady=2, sticky='w')
+    doj_calendar_btn.grid(row=5, column=2, padx=2, pady=2, sticky='w')
 
     salary_lbl = Label(detail_frame, text="Salary", font=('times new roman', 12, 'bold'), bg='white')
-    salary_lbl.grid(row=5, column=3, padx=(3, 1), pady=2, sticky='w')
-    salary_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)  # Reduced width
-    salary_entry.grid(row=5, column=4, padx=(1, 3), pady=2, sticky='ew')  # Adjusted column
+    salary_lbl.grid(row=5, column=3, padx=5, pady=2, sticky='w')
+    salary_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', width=10)
+    salary_entry.grid(row=5, column=4, padx=5, pady=2, sticky='w')
 
     usertype_lbl = Label(detail_frame, text="User Type", font=('times new roman', 12, 'bold'), bg='white')
-    usertype_lbl.grid(row=6, column=0, padx=(3, 1), pady=2, sticky='w')
+    usertype_lbl.grid(row=6, column=0, padx=5, pady=2, sticky='w')
     usertype_combo = ttk.Combobox(detail_frame, values=('Admin', 'Employee'), font=('times new roman', 12),
-                                  state='readonly', width=6)  # Reduced width
-    usertype_combo.grid(row=6, column=1, padx=(1, 3), pady=2, sticky='ew')
+                                  state='readonly', width=8)
+    usertype_combo.grid(row=6, column=1, padx=5, pady=2, sticky='w')
     usertype_combo.set('Select Type')
 
     password_lbl = Label(detail_frame, text="Password", font=('times new roman', 12, 'bold'), bg='white')
-    password_lbl.grid(row=6, column=2, padx=(3, 1), pady=2, sticky='w')
-    password_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', show='*',
-                           width=10)  # Reduced width
-    password_entry.grid(row=6, column=3, padx=(1, 3), pady=2, sticky='ew')
+    password_lbl.grid(row=6, column=2, padx=5, pady=2, sticky='w')
+    password_entry = Entry(detail_frame, font=('times new roman', 12), bg='lightyellow', show='*', width=15)
+    password_entry.grid(row=6, column=3, padx=5, pady=2, sticky='w')
 
     # Buttons for Add, Update, Delete, and Clear
     button_frame = Frame(detail_frame, bg='white')
-    button_frame.grid(row=7, columnspan=5, pady=8)  # Adjusted columnspan
+    button_frame.grid(row=7, column=0, columnspan=6, pady=10)
 
-    add_btn = Button(button_frame, text='Add', font=('times new roman', 12, 'bold'), bg='#2196f3', fg='white', width=10,
+    add_btn = Button(button_frame, text='Add', font=('times new roman', 12, 'bold'), bg='#2196f3', fg='white', width=8,
                      cursor='hand2', command=save_employee)
-    add_btn.grid(row=0, column=0, padx=3)
+    add_btn.grid(row=0, column=0, padx=5)
 
     update_btn = Button(button_frame, text='Update', font=('times new roman', 12, 'bold'), bg='#4caf50', fg='white',
-                        width=10, cursor='hand2', command=update_employee)
-    update_btn.grid(row=0, column=1, padx=3)
+                        width=8, cursor='hand2', command=update_employee)
+    update_btn.grid(row=0, column=1, padx=5)
 
     delete_btn = Button(button_frame, text='Delete', font=('times new roman', 12, 'bold'), bg='#f44336', fg='white',
-                        width=10, cursor='hand2', command=delete_employee)
-    delete_btn.grid(row=0, column=2, padx=3)
+                        width=8, cursor='hand2', command=delete_employee)
+    delete_btn.grid(row=0, column=2, padx=5)
 
     clear_btn = Button(button_frame, text='Clear', font=('times new roman', 12, 'bold'), bg='#ff9800', fg='white',
-                       width=10, cursor='hand2', command=clear_fields)
-    clear_btn.grid(row=0, column=3, padx=3)
+                       width=8, cursor='hand2', command=clear_fields)
+    clear_btn.grid(row=0, column=3, padx=5)
